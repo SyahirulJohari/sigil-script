@@ -417,6 +417,104 @@ html.v07 .moba-utility,
 html.v07 .v07-map {
   touch-action: none;
 }
+/* Compact HUD for short phone arenas. All sizes are in the arena's rotated coordinates. */
+html.v07.compact-hud #canvasWrap{container-type:inline-size}
+html.v07.compact-hud .hud{
+  top:7px!important;width:min(380px,calc(100% - 172px))!important;
+  padding:6px 9px!important;border-radius:10px!important
+}
+html.v07.compact-hud .hud:has(#runStrip:not([hidden])){
+  display:flex;align-items:center;gap:9px
+}
+html.v07.compact-hud .hud:has(#runStrip:not([hidden])) .topbar{display:none!important}
+html.v07.compact-hud .hud .meters{flex:1;min-width:0;gap:7px!important}
+html.v07.compact-hud .hud .meter-label{gap:3px;white-space:nowrap}
+html.v07.compact-hud .hud .meter-label b{display:none}
+html.v07.compact-hud .hud .run-strip{margin:0!important;gap:4px!important}
+html.v07.compact-hud .hud .run-stat{padding:3px 4px!important}
+html.v07.compact-hud .hud .run-stat small{font-size:7px!important;white-space:nowrap}
+html.v07.compact-hud .hud .run-stat b{font-size:11px!important;white-space:nowrap}
+html.v07.compact-hud .playcol .objective{display:none!important}
+html.v07.compact-hud .playcol:has(#trainingActions:not([hidden])) .objective{
+  display:flex!important;top:58px!important;width:min(330px,56%)!important;
+  max-width:none!important;padding:6px 8px!important
+}
+html.v07.compact-hud .playcol:has(#trainingActions:not([hidden])) .objective p{
+  display:block!important;max-height:none
+}
+html.v07.compact-hud .objective .objective-icon{display:none!important}
+html.v07.compact-hud .training-actions button{min-height:36px}
+html.v07.compact-hud .field-tip{
+  top:52px!important;min-width:0;max-width:min(280px,58%)!important;
+  width:max-content;padding:5px 9px;font-size:10px!important
+}
+html.v07.compact-hud .playcol:has(#trainingActions:not([hidden])) .field-tip{top:auto!important;bottom:66px}
+html.v07.compact-hud .v08-intel{display:none}
+html.v07.compact-hud .v08-intel:has(#v083Riposte:not([hidden])){
+  display:block;top:55px;left:auto;right:61px;width:auto;max-width:29%;
+  padding:0;border:0;background:none;box-shadow:none;backdrop-filter:none
+}
+html.v07.compact-hud .v08-intel>b,html.v07.compact-hud #v08IntelBody{display:none}
+html.v07.compact-hud #v083Riposte{margin:0;font-size:9px}
+html.v07.compact-hud .v07-map{
+  top:7px;left:8px;width:72px;padding:3px;border-radius:8px
+}
+html.v07.compact-hud .v07-map:focus-within{outline:2px solid var(--gold);outline-offset:2px}
+html.v07.compact-hud .v07-map:not(.expanded) .v07-map-heading{margin:0;padding:0}
+html.v07.compact-hud .v07-map:not(.expanded) .v07-map-heading span,
+html.v07.compact-hud .v07-map:not(.expanded) .v07-map-legend{display:none}
+html.v07.compact-hud .v07-map:not(.expanded) #v07MapExpand{
+  position:absolute;inset:0;width:100%;height:100%;
+  display:flex;align-items:flex-start;justify-content:flex-end;padding:2px 3px;
+  border:0;background:transparent;color:#f0f7ff;font-size:12px;text-shadow:0 1px 3px #020712
+}
+html.v07.compact-hud .v07-map.expanded{top:55px;width:min(210px,38%);z-index:10}
+html.v07.compact-hud .v07-map.expanded #v07MapExpand{width:36px;height:36px}
+html.v07.compact-hud .moba-utility{
+  top:7px!important;right:8px!important;max-width:46px!important;gap:5px!important
+}
+html.v07.compact-hud .moba-utility>:not(#v07Menu):not(#mobaPortal),
+html.v07.compact-hud .moba-utility>#mobaPortal:not(.portal-ready){display:none!important}
+html.v07.compact-hud .moba-utility>#v07Menu,
+html.v07.compact-hud .moba-utility>#mobaPortal{
+  width:44px!important;height:44px!important;min-width:44px!important;min-height:44px!important;
+  max-width:44px!important;max-height:44px!important;border-radius:10px!important
+}
+html.v07.compact-hud .quickbar-wrap.moba-docked{right:105px!important;bottom:8px!important;width:199px!important}
+html.v07.compact-hud .quickbar-wrap.moba-docked .quickbar{grid-template-columns:repeat(4,46px)!important;gap:5px!important}
+html.v07.compact-hud .quickbar-wrap.moba-docked .quick-slot{
+  width:46px!important;height:46px!important;min-height:46px!important;max-height:46px!important;
+  padding:3px!important;box-shadow:0 4px 12px #0008!important
+}
+html.v07.compact-hud .quickbar-wrap.moba-docked .quick-slot.selected{
+  box-shadow:0 0 0 2px #fff0bd50,0 4px 12px #0008!important
+}
+html.v07.compact-hud .quickbar-wrap.moba-docked .quicktxt{display:none!important}
+html.v07.compact-hud .quickbar-wrap.moba-docked .quickkey{
+  right:3px!important;top:3px!important;width:13px!important;height:13px!important;
+  padding:1px 0!important;font-size:8px!important
+}
+html.v07.compact-hud .quickbar-wrap.moba-docked .quickglyph{font-size:22px!important}
+html.v07.compact-hud .quickbar-wrap.moba-docked .cooldown{font-size:12px!important}
+html.v07.compact-hud .moba-mobile{height:82px!important;left:8px!important;right:8px!important;bottom:8px!important}
+html.v07.compact-hud .moba-mobile .analog-stick{width:82px!important;height:82px!important}
+html.v07.compact-hud .moba-mobile .stick-ring{width:76px!important;height:76px!important;box-shadow:none!important}
+html.v07.compact-hud .moba-mobile .stick-track{width:36px!important;height:36px!important}
+html.v07.compact-hud .moba-mobile .stick-label{display:none}
+html.v07.compact-hud .moba-mobile .fight-controls{
+  width:92px!important;flex-direction:row!important;justify-content:flex-end!important;gap:4px!important
+}
+html.v07.compact-hud .moba-mobile .fight-controls .touch{
+  width:44px!important;height:44px!important;font-size:9px!important;box-shadow:0 4px 12px #0008!important
+}
+html.v07.compact-hud #castTouch br,html.v07.compact-hud #castTouch .cast-symbol{display:none}
+.compact-menu-actions{display:none}
+html.v07.compact-hud .compact-menu-actions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+.compact-menu-actions .btn{min-height:44px;padding:6px 4px;font-size:11px}
+@container (max-width:415px){
+  html.v07.compact-hud .quickbar-wrap.moba-docked{right:8px!important;bottom:60px!important}
+  html.v07.compact-hud .hud .run-stat:not(.floorstat){display:none}
+}
 </style>
 </head>
 <body>
@@ -476,7 +574,7 @@ html.v07 .v07-map {
 <div id="leaderboardBody"></div><p class="rank-caption">A record is added when a run ends. Rankings are local-only and are not verified against cheating or shared across players.</p><div class="dialog-actions"><button class="btn gold" id="leaderClose">Return to game</button></div></div></div>
 <script>
 (()=>{'use strict';
-const $=id=>document.getElementById(id),T=44,COLS=27,ROWS=18,W=COLS*T,H=ROWS*T,TAU=Math.PI*2;
+const $=id=>document.getElementById(id),T=44,COLS=27,ROWS=18,W=COLS*T,H=ROWS*T,TAU=Math.PI*2,PORTAL_USE_RANGE=115;
 const canvas=$('game'),ctx=canvas.getContext('2d'),wrap=$('canvasWrap');
 
 // Built-in Web Audio synthesis: no downloads, no licensed samples, no network needed.
@@ -663,6 +761,7 @@ function offerDiscovery(){if(!state.endless.active||state.endless.floor%3!==0||s
 function chooseDiscovery(id){let d=state.discovery;if(!d||!d.options.some(o=>o.id===id))return;
  let buffs=state.endless.boons;buffs[id]=(buffs[id]||0)+1;
  state.discovery=null;$('v08Discovery').hidden=true;
+ showTip('Portal unlocked',2.5);
  let chosen=DISCOVERIES.find(o=>o.id===id);toast(chosen.name+' acquired for this run!');pushLog('Arcane Discovery: '+chosen.name+' (run only).');
 }
 $('v08DiscoveryCards').addEventListener('click',ev=>{let b=ev.target.closest('[data-discovery]');if(b)chooseDiscovery(b.dataset.discovery);});
@@ -805,6 +904,12 @@ function updateAll(){if(!state)return;document.querySelector('.playcol')?.classL
   $('trainingBook').hidden=state.trainingStep!==1;$('trainingContinue').hidden=state.trainingStep!==4;$('trainingStoryTrial').hidden=state.trainingStep!==4;$('trainingSkip').hidden=state.trainingStep===4;
  }else{
   $('objectiveIcon').textContent=state.cleared?'✧':state.endless.active?'∞':state.room===2?'✦':'◇';$('objectiveTitle').textContent=state.cleared?'Portal unlocked!':state.endless.active?(state.endless.floor%5===0?'Defeat the floor guardian':`Survive Floor ${state.endless.floor}`):state.room===2?'Defeat the Null Warden':'Defeat the guardians';$('objectiveDetail').textContent=state.cleared?'Walk to the bright portal on the RIGHT, or tap Portal near it.':state.endless.active?'One life only. Clear enemies quickly for score bonuses; every 5th floor has a boss.':state.room===2?'Dodge its projectiles. Cast your strongest assembled spell.':'Defeat the monsters; collect fallen essence to restore mana and health.';
+ }
+ const portal=$('mobaPortal');
+ if(portal){
+  const exit=portalPosition();
+  const canEnter=training?state.trainingStep===4:state.cleared&&(state.room<2||state.endless.active);
+  portal.classList.toggle('portal-ready',canEnter&&Math.hypot(p.x-exit.x,p.y-exit.y)<PORTAL_USE_RANGE);
  }
  renderLab();updateQuickCooldowns();updateRunHUD();
  $('runeCounter').textContent=Object.values(runeGroups).flat().filter(x=>!x.unlock||x.unlock<=state.unlocked).length+' / '+Object.values(runeGroups).flat().length+' runes';$('unlockList').innerHTML=[['1','Clear chamber 1','Repeat ×2 · Arcane · Pierce · If Afflicted · Catalyst'],['2','Clear chamber 2','Burst · Surge · Execute']].map(([n,title,items])=>`<div class="unlock ${state.unlocked>=+n?'got':''}"><div><b>${title}</b><div style="font-size:10px;color:#9fb1d0;margin-top:3px">${items}</div></div><span>${state.unlocked>=+n?'✓ Found':'Locked'}</span></div>`).join('');
@@ -1156,10 +1261,10 @@ function damageEnemy(e,amount,kind='generic',source=null){if(e.dead)return;
  }
 e.hp-=actual;e.flash=.13;floatText('-'+actual,e.x,e.y-22,kind==='frost'?'#a6eeff':'#ffe0a8',14);particle(e.x,e.y,e.color,5,60);if(kind==='ember'){e.burn=2.9;e.burnTick=0;}if(kind==='frost')e.slow=2.7;
  if(e.hp<=0){e.dead=true;state.kills++;soundEngine.play('enemyDown',e.type);if(state.endless.active&&!state.endless.ended){let gain=e.type==='boss'?ENDLESS_RULES.boss:e.type==='sentinel'?ENDLESS_RULES.elite:ENDLESS_RULES.normal;state.endless.score+=gain;if(source?.custom){state.endless.score+=5;state.customKills++;floatText('+5 CRAFTED',e.x,e.y-90,'#b9f4ce',11);}floatText('+'+gain+' SCORE',e.x,e.y-66,'#ffe2a1',12);}particle(e.x,e.y,e.color,e.type==='boss'?35:15,e.type==='boss'?210:120);floatText('✧',e.x,e.y-35,'#f6daa2',28);state.orbs.push({x:e.x,y:e.y,life:15,type:state.kills%3===0?'health':'mana',r:11,phase:Math.random()*TAU});pushLog(`${{imp:'Cinder Imp',wisp:'Mist Wisp',sentinel:'Stone Sentinel',boss:'Null Warden'}[e.type]} defeated.`);if(!state.enemies.some(f=>!f.dead))clearRoom();}}
-function clearRoom(){state.cleared=true;state.target=null;state.shots=state.shots.filter(s=>s.type==='player');for(const foe of state.enemies)foe.telegraph=null;soundEngine.play('floorClear');if(state.endless.active){let r=state.endless;if(r.ended)return;r.cleared++;let spent=Math.max(0,r.elapsed-r.floorStart);let speed=Math.max(0,Math.round((60-spent)*2));let flawless=r.flawless?ENDLESS_RULES.flawless:0;let gained=ENDLESS_RULES.clear+speed+flawless;r.score+=gained;if(r.floor===10)r.floor10Time=Math.max(.1,r.elapsed);let old=state.unlocked;state.unlocked=Math.max(state.unlocked,r.floor>=2?2:1);if(state.unlocked>old){saveLibrary();renderSpell();}state.player.hp=Math.min(state.player.maxHp,state.player.hp+Math.max(10,20-Math.floor(r.floor/4)));state.player.mana=state.player.maxMana;pushLog(`Floor ${r.floor} cleared: +${gained} (${speed} speed, ${flawless} flawless).`);showTip(`FLOOR ${r.floor} CLEARED · +${scoreText(gained)} SCORE!`,3.3);if(r.floor===10)toast(`10-floor time: ${formatTime(r.floor10Time)}!`);offerDiscovery();updateAll();return;}if(state.room<2){let old=state.unlocked;state.unlocked=Math.max(state.unlocked,state.room+1);saveLibrary();state.player.hp=Math.min(100,state.player.hp+20);state.player.mana=100;let reward=state.room===0?'Arcane, Repeat ×2 and Pierce':'Burst, Surge and Execute';pushLog(`New runes unlocked: ${reward}. Portal is open!`);showTip(`✦ NEW RUNES: ${reward}!`,5);toast('Open your spellbook to try your new runes.');if(state.unlocked!==old)renderSpell();}else{state.won=true;showEnd(true);}}
+function clearRoom(){state.cleared=true;state.target=null;state.shots=state.shots.filter(s=>s.type==='player');for(const foe of state.enemies)foe.telegraph=null;soundEngine.play('floorClear');if(state.endless.active){let r=state.endless;if(r.ended)return;r.cleared++;let spent=Math.max(0,r.elapsed-r.floorStart);let speed=Math.max(0,Math.round((60-spent)*2));let flawless=r.flawless?ENDLESS_RULES.flawless:0;let gained=ENDLESS_RULES.clear+speed+flawless;r.score+=gained;if(r.floor===10)r.floor10Time=Math.max(.1,r.elapsed);let old=state.unlocked;state.unlocked=Math.max(state.unlocked,r.floor>=2?2:1);if(state.unlocked>old){saveLibrary();renderSpell();}state.player.hp=Math.min(state.player.maxHp,state.player.hp+Math.max(10,20-Math.floor(r.floor/4)));state.player.mana=state.player.maxMana;pushLog(`Floor ${r.floor} cleared: +${gained} (${speed} speed, ${flawless} flawless).`);showTip(`Floor ${r.floor} cleared · +${scoreText(gained)} · Portal unlocked`,3.3);if(r.floor===10)toast(`10-floor time: ${formatTime(r.floor10Time)}!`);offerDiscovery();updateAll();return;}if(state.room<2){let old=state.unlocked;state.unlocked=Math.max(state.unlocked,state.room+1);saveLibrary();state.player.hp=Math.min(100,state.player.hp+20);state.player.mana=100;let reward=state.room===0?'Arcane, Repeat ×2 and Pierce':'Burst, Surge and Execute';pushLog(`New runes unlocked: ${reward}. Portal is open!`);showTip(`Portal unlocked · New runes: ${reward}`,5);toast('Open your spellbook to try your new runes.');if(state.unlocked!==old)renderSpell();}else{state.won=true;showEnd(true);}}
 function enterPortal(){if(currentPaused()||(state.room>=2&&!state.endless.active))return;let p=state.player,pos=portalPosition(),dist=Math.hypot(p.x-pos.x,p.y-pos.y);
- if(state.room===-1){if(state.trainingStep!==4){if(dist<155)showTip('Finish the lessons or skip to the Spell Testing Lab.',2.5);return;}if(dist<115)launchEndless();else showTip('Walk to the glowing doorway, or press Enter Endless Archive.',2.3);return;}
-if(!state.cleared){if(dist<155)showTip('The portal is sealed. Defeat every enemy first!',2);return;}if(dist<115){if(state.endless.active)spawnEndlessFloor(state.endless.floor+1);else spawnRoom(state.room+1);}else showTip('Find the bright doorway on the right side of the room.',2.4);}
+ if(state.room===-1){if(state.trainingStep!==4){if(dist<155)showTip('Finish the lessons or skip to the Spell Testing Lab.',2.5);return;}if(dist<PORTAL_USE_RANGE)launchEndless();else showTip('Walk to the glowing doorway, or press Enter Endless Archive.',2.3);return;}
+if(!state.cleared){if(dist<155)showTip('The portal is sealed. Defeat every enemy first!',2);return;}if(dist<PORTAL_USE_RANGE){if(state.endless.active)spawnEndlessFloor(state.endless.floor+1);else spawnRoom(state.room+1);}else showTip('Find the bright doorway on the right side of the room.',2.4);}
 
 function keyboardAxis(){return {x:(keys.has('d')||keys.has('arrowright')||touchDirs.has('right')?1:0)-(keys.has('a')||keys.has('arrowleft')||touchDirs.has('left')?1:0),y:(keys.has('s')||keys.has('arrowdown')||touchDirs.has('down')?1:0)-(keys.has('w')||keys.has('arrowup')||touchDirs.has('up')?1:0)};}
 function inputAxis(){let k=keyboardAxis();if(k.x||k.y)return k;if(Math.hypot(analog.x,analog.y)>.12)return {x:analog.x,y:analog.y};if(Math.hypot(padMotion.x,padMotion.y)>.12)return {x:padMotion.x,y:padMotion.y};return {x:0,y:0};}
@@ -1304,7 +1409,10 @@ function findPhoneCameraFocus(){
  return focus;
 }
 
-function resize(){phoneCameraFocus=null;dpr=Math.min(window.devicePixelRatio||1,2);vw=Math.max(1,wrap.clientWidth);vh=Math.max(1,wrap.clientHeight);canvas.width=Math.round(vw*dpr);canvas.height=Math.round(vh*dpr);scale=Math.max(.83,Math.max(vw/W,vh/H)*1.035);}
+function resize(){phoneCameraFocus=null;dpr=Math.min(window.devicePixelRatio||1,2);vw=Math.max(1,wrap.clientWidth);vh=Math.max(1,wrap.clientHeight);
+ const root=document.documentElement;
+ root.classList.toggle('compact-hud',root.classList.contains('arcade-immersive')&&vh<=480);
+ canvas.width=Math.round(vw*dpr);canvas.height=Math.round(vh*dpr);scale=Math.max(.83,Math.max(vw/W,vh/H)*1.035);}
 function rounded(x,y,w,h,r,color){ctx.fillStyle=color;ctx.beginPath();ctx.roundRect(x,y,w,h,r);ctx.fill();}
 function line(x1,y1,x2,y2,color,width=1){ctx.strokeStyle=color;ctx.lineWidth=width;ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.stroke();}
 function disk(x,y,r,color){ctx.beginPath();ctx.arc(x,y,r,0,TAU);ctx.fillStyle=color;ctx.fill();}
@@ -1502,7 +1610,7 @@ window.__sigilDebug={getSnapshot:()=>({room:state.room,trainingStep:state.traini
   if(!mobile){return;}
   const castBtn=document.getElementById('castTouch');
   const dashBtn=document.getElementById('dodgeTouch');
-  if(castBtn) castBtn.innerHTML='CAST<br>✦';
+  if(castBtn) castBtn.innerHTML='CAST<br><span class="cast-symbol" aria-hidden="true">✦</span>';
   if(dashBtn) dashBtn.textContent='DASH';
 })();
 </script>
@@ -1562,7 +1670,14 @@ window.__sigilDebug={getSnapshot:()=>({room:state.room,trainingStep:state.traini
  const map=document.createElement('section');map.className='v07-map';map.id='v07Map';map.setAttribute('aria-label','Live dungeon mini-map');
  map.innerHTML='<div class="v07-map-heading"><span>◈ MAP <span id="v07MapRoom">COURTYARD</span></span><button type="button" id="v07MapExpand" aria-label="Expand mini-map" aria-expanded="false">⛶</button></div><canvas id="v07MiniMap" width="270" height="180" aria-label="Dungeon map: gold marker is you, red markers are enemies, green marker is portal"></canvas><div class="v07-map-legend"><span><i style="color:#fbd47b">●</i> You</span><span><i style="color:#f17e86">●</i> Foes</span><span><i style="color:#77f2bd">●</i> Exit</span></div>';
  wrap.appendChild(map);
- const mapToggle=$('v07MapExpand');mapToggle.addEventListener('click',()=>{map.classList.toggle('expanded');mapToggle.setAttribute('aria-expanded',String(map.classList.contains('expanded')));mapToggle.textContent=map.classList.contains('expanded')?'×':'⛶';});
+ const mapToggle=$('v07MapExpand');
+ const setMapExpanded=expanded=>{
+  map.classList.toggle('expanded',expanded);
+  mapToggle.setAttribute('aria-expanded',String(expanded));
+  mapToggle.setAttribute('aria-label',expanded?'Collapse mini-map':'Expand mini-map');
+  mapToggle.textContent=expanded?'×':'⛶';
+ };
+ mapToggle.addEventListener('click',()=>setMapExpanded(!map.classList.contains('expanded')));
  // Sidebar is now a compact, scrollable overlay; preserve all nodes so existing event listeners survive.
  const drawer=document.createElement('div');drawer.className='v07-drawer-wrap';drawer.id='v07DrawerWrap';drawer.hidden=true;
  drawer.innerHTML='<button type="button" class="v07-drawer-backdrop" aria-label="Close adventure panel"></button><div class="v07-drawer" role="dialog" aria-modal="true" aria-label="Arcane adventure panel"><header class="v07-drawer-header"><span>✥ Arcane Compendium</span><button type="button" id="v07DrawerClose" aria-label="Close adventure panel">×</button></header></div>';
@@ -1593,6 +1708,21 @@ window.__sigilDebug={getSnapshot:()=>({room:state.room,trainingStep:state.traini
  const closeSettings=()=>{settings.hidden=true;};
  const openSettings=()=>{if(!$('startOverlay').hidden||!$('spellOverlay').hidden||!$('grimoireOverlay').hidden||!$('leaderboardOverlay').hidden||!$('v08Discovery').hidden||!$('endOverlay').hidden)return;closeDrawer();settings.hidden=false;syncSound();};
  utility.appendChild(tool('v07Settings','⚙','Settings and volume',openSettings));
+ const menuActions=document.createElement('nav');
+ menuActions.className='compact-menu-actions';
+ menuActions.setAttribute('aria-label','Game actions');
+ for(const [id,label] of [
+  ['openSpellbook','Spell Forge'],['openGrimoire','Grimoire'],['arenaLeaderboard','Rankings'],
+  ['quickHeal','Quick Mend'],['v07Settings','Settings'],['helpButton','How to play']
+ ]){
+  const button=document.createElement('button');
+  button.type='button';
+  button.className='btn';
+  button.textContent=label;
+  button.addEventListener('click',()=>{closeDrawer();$(id)?.click();});
+  menuActions.appendChild(button);
+ }
+ sidebar.prepend(menuActions);
  $('v07SettingsClose').addEventListener('click',closeSettings);
  settings.addEventListener('click',e=>{if(e.target===settings)closeSettings();});
  const syncSound=()=>{const api=window.__sigilSfx;if(!api)return;const sound=$('v07SoundButton');sound.textContent=api.isOn()?'🔊 On':'🔇 Muted';sound.setAttribute('aria-pressed',String(api.isOn()));const src=$('sfxVolume');if(src){$('v07SoundRange').value=src.value;$('v07SoundPct').textContent=src.value+'%';}};
@@ -1600,7 +1730,7 @@ window.__sigilDebug={getSnapshot:()=>({room:state.room,trainingStep:state.traini
  $('v07SoundRange').addEventListener('input',e=>{const api=window.__sigilSfx;if(api){api.setVolume(Number(e.target.value)/100);syncSound();}});
  $('v07FullScreen').addEventListener('click',async()=>{const old=$('orientationModeButton');if(old){old.click();return;}try{if(!document.fullscreenElement)await document.documentElement.requestFullscreen();if(screen.orientation?.lock)await screen.orientation.lock('landscape');}catch(e){/* orientation lock is browser-dependent */}});
  ['openSpellbook','openGrimoire','openLeaderboardSidebar','startEndlessSidebar','hubStoryDungeon','hubEnterDungeon','returnHub'].forEach(id=>{$(id)?.addEventListener('click',closeDrawer);});
- window.addEventListener('keydown',e=>{if((e.key.toLowerCase()==='b'||e.key.toLowerCase()==='g')&&(isOpen())){closeDrawer();closeSettings();}if(e.key==='Escape'&&(isOpen()||map.classList.contains('expanded'))){closeDrawer();closeSettings();map.classList.remove('expanded');mapToggle.setAttribute('aria-expanded','false');mapToggle.textContent='⛶';e.preventDefault();e.stopImmediatePropagation();}},true);
+ window.addEventListener('keydown',e=>{if((e.key.toLowerCase()==='b'||e.key.toLowerCase()==='g')&&(isOpen())){closeDrawer();closeSettings();}if(e.key==='Escape'&&(isOpen()||map.classList.contains('expanded'))){closeDrawer();closeSettings();setMapExpanded(false);e.preventDefault();e.stopImmediatePropagation();}},true);
  window.addEventListener('blur',()=>{if(!settings.hidden)closeSettings();});
  // No scrolling/page navigation needed to reach a dungeon or a safe practice target.
  // Reflect important UI state to game controls for testing and pause logic.
@@ -1620,7 +1750,7 @@ window.__sigilDebug={getSnapshot:()=>({room:state.room,trainingStep:state.traini
   if(info.cleared||(info.room===-1&&info.trainingStep===4)){const c=info.portal;g.fillStyle='#4af1c0';g.shadowColor='#6effd8';g.shadowBlur=7;g.fillRect(c.x*px-4,c.y*py-5,8,10);g.shadowBlur=0;}
   for(const foe of enemies){const x=foe.x*px,y=foe.y*py;g.fillStyle=foe.boss?'#ee9afa':'#ff798d';g.shadowColor=foe.boss?'#ee9afa':'#ff6677';g.shadowBlur=4;g.beginPath();g.arc(x,y,foe.boss?4.2:2.8,0,Math.PI*2);g.fill();g.shadowBlur=0;}
   const x=player.x*px,y=player.y*py;g.save();g.translate(x,y);g.rotate(player.dir);g.fillStyle='#ffe1a5';g.shadowColor='#ffdc78';g.shadowBlur=9;g.beginPath();g.moveTo(7,0);g.lineTo(-5,-4.5);g.lineTo(-3,0);g.lineTo(-5,4.5);g.closePath();g.fill();g.restore();
-  if(info.room!==seenRoom){seenRoom=info.room;map.classList.remove('expanded');mapToggle.textContent='⛶';mapToggle.setAttribute('aria-expanded','false');}
+  if(info.room!==seenRoom){seenRoom=info.room;setMapExpanded(false);}
   $('v07MapRoom').textContent=info.endless?`F${info.floor}`:info.room===-1?'COURTYARD':`ROOM ${info.room+1}`;
  }
  function frame(){if((frames++%7)===0)redraw();requestAnimationFrame(frame);}requestAnimationFrame(frame);
