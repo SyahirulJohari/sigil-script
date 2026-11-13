@@ -1534,7 +1534,23 @@ $('openSpellbook').addEventListener('click',()=>{state.editingId=null;$('spellSa
 $('openGrimoire').addEventListener('click',openGrimoire);$('closeGrimoire').addEventListener('click',closeGrimoire);$('bookToGrimoire').addEventListener('click',openGrimoire);$('grimoireToForge').addEventListener('click',()=>enterForge(true));$('saveSpell').addEventListener('click',saveCustomSpell);
 $('grimoireList').addEventListener('click',event=>{let b=event.target.closest('button');if(!b)return;if(b.hasAttribute('data-equip-id'))equipCustom(b.dataset.equipId,Number(b.dataset.equipSlot));if(b.hasAttribute('data-edit-id'))editCustom(b.dataset.editId);if(b.hasAttribute('data-delete-id'))deleteCustom(b.dataset.deleteId);});
 $('starterLoadouts').addEventListener('click',event=>{let b=event.target.closest('[data-preset-key]');if(b)equipPreset(b.dataset.presetKey,Number(b.dataset.presetSlot));});
-$('quickBar').addEventListener('click',event=>{let b=event.target.closest('[data-quick-slot]');if(b)selectQuickSlot(Number(b.dataset.quickSlot),true);});
+const quickBar=$('quickBar');
+let quickBarTouch=false;
+quickBar.addEventListener('pointerdown',event=>{
+ quickBarTouch=event.pointerType==='touch';
+ if(!quickBarTouch||event.button!==0||currentPaused())return;
+ const slot=event.target.closest('[data-quick-slot]');
+ if(!slot)return;
+ // A second finger can press a spell while the joystick holds its own pointer.
+ event.preventDefault();
+ selectQuickSlot(Number(slot.dataset.quickSlot),true);
+});
+quickBar.addEventListener('click',event=>{
+ // Touch already activated on press. Keep keyboard and mouse button activation.
+ if(event.detail!==0&&(quickBarTouch||event.pointerType==='touch'))return;
+ const slot=event.target.closest('[data-quick-slot]');
+ if(slot)selectQuickSlot(Number(slot.dataset.quickSlot),true);
+});
 $('closeSpellX').addEventListener('click',closeBook);$('equipSpell').addEventListener('click',()=>{closeBook();toast(state.draftMode?`${getSpell().name} ready with Space / CAST. Save it to keep it.`:`${getSpell().name} equipped.`);});
 $('resetSpell').addEventListener('click',()=>{state.active={core:'ember',aim:'focus',logic:'once',mod:'stable'};state.draftMode=true;state.editingId=null;$('spellSaveName').value='';renderSpell();renderQuickBar();});
 $('quickHeal').addEventListener('click',castBasicHeal);
