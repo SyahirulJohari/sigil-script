@@ -515,6 +515,8 @@ html.v07.compact-hud .compact-menu-actions{display:grid;grid-template-columns:re
   html.v07.compact-hud .quickbar-wrap.moba-docked{right:8px!important;bottom:60px!important}
   html.v07.compact-hud .hud .run-stat:not(.floorstat){display:none}
 }
+#startOverlay .start-journey{margin-top:8px}
+#startOverlay .tutorial-steps[hidden]{display:none}
 </style>
 </head>
 <body>
@@ -560,7 +562,24 @@ html.v07.compact-hud .compact-menu-actions{display:grid;grid-template-columns:re
 </main>
 </div>
 <div class="overlay" id="v08Discovery" role="dialog" aria-modal="true" aria-label="Choose an Arcane Discovery" hidden><div class="dialog v08-discovery-dialog"><div class="v08-discovery-icon">✧</div><div class="eyebrow" id="v08DiscoveryFloor">Floor cleared</div><h2>Choose an Arcane Discovery</h2><p>Choose one temporary attunement. It lasts until this permadeath run ends. Build around the magic you find.</p><div id="v08DiscoveryCards" class="v08-discovery-cards"></div><p class="v08-discovery-note">Your run timer pauses between floors. You may open the Forge before entering the next portal.</p></div></div><div class="toast" id="toast" role="status"></div>
-<div class="overlay" id="startOverlay" role="dialog" aria-modal="true" aria-labelledby="startTitle"><div class="dialog"><div class="intro-art" aria-hidden="true">✥</div><div class="kicker">The Apprentice Courtyard · Training ground</div><h2 id="startTitle">Learn the language of magic.</h2><p id="startDescription">Complete four short lessons, then practise your spells and attempt the Endless Archive: one life, no checkpoints.</p><div class="tutorial-steps"><div class="stepbox"><div class="step-num">01</div><strong>Move</strong><span>WASD, click-to-move, controller stick, or touch joystick.</span></div><div class="stepbox"><div class="step-num">02</div><strong>Build + cast</strong><span>Choose Frost in the spellbook, then press Space / CAST.</span></div><div class="stepbox"><div class="step-num">03</div><strong>Dash</strong><span>Press Shift / DASH, then use the portal.</span></div></div><p class="smallcopy">After the lessons, test the four starting quick spells (keys 1–4). Assemble custom spells and save them in your Grimoire. You can return here from the dungeon.</p><div class="dialog-actions"><button class="btn gold" id="startButton">✦ Start training</button><button class="btn" id="skipIntro">Skip lessons → Practice</button></div></div></div>
+<div class="overlay" id="startOverlay" role="dialog" aria-modal="true" aria-labelledby="startTitle" aria-describedby="startDescription">
+ <div class="dialog">
+  <div class="intro-art" aria-hidden="true">✥</div>
+  <div class="kicker">Rune-crafting action RPG</div>
+  <h2 id="startTitle">Sigil Script</h2>
+  <p id="startDescription">You’re an apprentice mage. Combine runes to change how your spells aim, trigger, and strike, then take your creations into the dungeon.</p>
+  <p id="startJourney" class="start-journey">Learn the basics in the Apprentice Courtyard, explore the Hollow Archive in Story Trial, or see how far you can descend in Endless mode with one life.</p>
+  <div class="tutorial-steps" id="startControls" hidden>
+   <div class="stepbox"><strong>Move</strong><span>Use WASD, click the floor, or use a gamepad or touch joystick.</span></div>
+   <div class="stepbox"><strong>Cast</strong><span>Tap a quick spell or press 1–4. CAST or Space repeats the active spell.</span></div>
+   <div class="stepbox"><strong>Dash</strong><span>Tap DASH or press Shift to evade attacks.</span></div>
+  </div>
+  <div class="dialog-actions">
+   <button class="btn gold" id="startButton">✦ Start training</button>
+   <button class="btn" id="skipIntro">Skip lessons → Practice</button>
+  </div>
+ </div>
+</div>
 <div class="overlay" id="spellOverlay" hidden role="dialog" aria-modal="true" aria-labelledby="spellDialogTitle"><div class="dialog book-dialog"><div class="bookhead"><div><div class="eyebrow">Arcane workbench · combat paused</div><h2 id="spellDialogTitle">Assemble your spell</h2><p>Choose one rune from each socket. Watch the magical words and effects change as you select each rune.</p></div><button class="close-x" id="closeSpellX" aria-label="Close spellbook">✕</button></div>
 <div class="live-chant" aria-label="Live spell incantation preview"><div class="chant-head"><span>✧ Incantation forge</span><span class="chant-tag">Changes with your runes</span></div><p class="chant-words" id="compiledIncantation" aria-live="polite">Ignis Aeterna, awaken the first flame.</p><p class="chant-note">These are the words your mage would invoke. Each selected rune changes part of the incantation.</p></div>
 <div class="bookgroups" id="bookGroups"></div>
@@ -1483,13 +1502,34 @@ function pointerTarget(ev){
  buildMouseRoute(x,y);
 }
 
-function restart(){if($('v08Discovery'))$('v08Discovery').hidden=true;closeLeaderboard();$('endOverlay').classList.remove('endless-result');keys.clear();touchDirs.clear();touchCast=false;$('endOverlay').hidden=true;$('spellOverlay').hidden=true;$('grimoireOverlay').hidden=true;$('startOverlay').hidden=false;$('startTitle').textContent='Learn the language of magic.';$('startDescription').textContent='Complete four short lessons, then practise your spells and attempt the Endless Archive: one life, no checkpoints.';$('startButton').textContent='✦ Start training';$('skipIntro').hidden=false;initialize();}
-$('startButton').addEventListener('click',()=>{$('startOverlay').hidden=true;state.started=true;showTip(state.room===-1?'Lesson 1: Walk into the glowing circle!':'Move with WASD, click-to-move, controller, or joystick!',3.5);canvas.focus?.();});
+const welcomeDescription=$('startDescription').textContent;
+function showStartOverlay(help=false){
+ $('startTitle').textContent=help?'How to play':'Sigil Script';
+ $('startDescription').textContent=help
+  ? (state.room===-1
+    ? 'Follow the Courtyard lessons to learn rune crafting, then try your spells on the practice dummy.'
+    : 'Dash out of marked attack areas. The Warden alternates volleys, targeted sigils, and a burst with a safe gap. Use the Forge to combine runes and the Grimoire to save spells.')
+  : welcomeDescription;
+ $('startJourney').hidden=help;
+ $('startControls').hidden=!help;
+ $('startButton').textContent=help?'▶ Continue exploring':'✦ Start training';
+ $('skipIntro').hidden=help;
+ $('startOverlay').hidden=false;
+}
+function restart(){if($('v08Discovery'))$('v08Discovery').hidden=true;closeLeaderboard();$('endOverlay').classList.remove('endless-result');keys.clear();touchDirs.clear();touchCast=false;$('endOverlay').hidden=true;$('spellOverlay').hidden=true;$('grimoireOverlay').hidden=true;showStartOverlay();initialize();}
+$('startButton').addEventListener('click',()=>{
+ $('startOverlay').hidden=true;
+ if(!state.started){
+  state.started=true;
+  showTip('Lesson 1: Walk into the glowing circle!',3.5);
+ }
+ canvas.focus?.();
+});
 $('skipIntro').addEventListener('click',()=>{$('startOverlay').hidden=true;state.started=true;startFreePractice(true);});
 $('trainingBook').addEventListener('click',()=>{if(state.started&&state.room===-1&&state.trainingStep===1)openBook();});
 $('trainingSkip').addEventListener('click',()=>{if(state.started&&state.room===-1)startFreePractice(true);});
 $('trainingContinue').addEventListener('click',()=>{if(state.started&&state.room===-1&&state.trainingStep===4)launchEndless();});
-$('helpButton').addEventListener('click',()=>{if(state.started&&!state.dead&&!state.won){$('startTitle').textContent='How to play';$('startDescription').textContent=state.room===-1?'Complete four safe lessons, then use the Spell Testing Lab to measure damage against different dummies. Enter the dungeon when ready.':'Enemies pursue you, but dangerous attacks show an orange, cyan, or purple warning first. Dodge out of the marked area or Dash through it. The Warden alternates arc volleys, targeted sigils, and a radial burst with a safe gap.';$('startButton').textContent='▶ Continue exploring';$('skipIntro').hidden=true;}else{$('startTitle').textContent='Learn the language of magic.';$('startButton').textContent='✦ Start training';$('skipIntro').hidden=false;}$('startOverlay').hidden=false;});
+$('helpButton').addEventListener('click',()=>showStartOverlay(state.started&&!state.dead&&!state.won));
 $('openSpellbook').addEventListener('click',()=>{state.editingId=null;$('spellSaveName').value='';openBook();});
 $('openGrimoire').addEventListener('click',openGrimoire);$('closeGrimoire').addEventListener('click',closeGrimoire);$('bookToGrimoire').addEventListener('click',openGrimoire);$('grimoireToForge').addEventListener('click',()=>enterForge(true));$('saveSpell').addEventListener('click',saveCustomSpell);
 $('grimoireList').addEventListener('click',event=>{let b=event.target.closest('button');if(!b)return;if(b.hasAttribute('data-equip-id'))equipCustom(b.dataset.equipId,Number(b.dataset.equipSlot));if(b.hasAttribute('data-edit-id'))editCustom(b.dataset.editId);if(b.hasAttribute('data-delete-id'))deleteCustom(b.dataset.deleteId);});
