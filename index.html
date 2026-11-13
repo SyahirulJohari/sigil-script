@@ -1266,7 +1266,45 @@ function update(dt){let p=state.player;state.elapsed+=dt;state.frame+=dt;state.c
  for(let f of state.floats){f.t+=dt;f.y-=30*dt;}state.floats=state.floats.filter(f=>f.t<f.max);
  uiTimer-=dt;if(uiTimer<=0){updateAll();uiTimer=.12;}
 }
-function resize(){dpr=Math.min(window.devicePixelRatio||1,2);vw=Math.max(1,wrap.clientWidth);vh=Math.max(1,wrap.clientHeight);canvas.width=Math.round(vw*dpr);canvas.height=Math.round(vh*dpr);scale=Math.max(.83,Math.max(vw/W,vh/H)*1.035);}
+let phoneCameraFocus=null;
+
+function canvasPoint(clientX,clientY,rect,rotated){
+ if(rotated){
+  return {x:(clientY-rect.top)*vw/Math.max(1,rect.height),y:(rect.right-clientX)*vh/Math.max(1,rect.width)};
+ }
+ return {x:(clientX-rect.left)*vw/Math.max(1,rect.width),y:(clientY-rect.top)*vh/Math.max(1,rect.height)};
+}
+
+const cameraHudSelector='.hud,.objective,#v07Map,.moba-utility,.quickbar-wrap.moba-docked,.analog-stick,.fight-controls,#v08Intel';
+
+function findPhoneCameraFocus(){
+ const rect=canvas.getBoundingClientRect();
+ const rotated=document.documentElement.classList.contains('arcade-virtual');
+ const margin=Math.min(40*scale,vw/2,vh/2);
+ const center={x:vw/2,y:vh/2};
+ const candidatesX=[center.x],candidatesY=[center.y],blockedAreas=[];
+ for(const element of wrap.querySelectorAll(cameraHudSelector)){
+  const bounds=element.getBoundingClientRect();
+  if(!bounds.width||!bounds.height)continue;
+  const a=canvasPoint(bounds.left,bounds.top,rect,rotated);
+  const b=canvasPoint(bounds.right,bounds.bottom,rect,rotated);
+  const left=Math.min(a.x,b.x)-margin,right=Math.max(a.x,b.x)+margin;
+  const top=Math.min(a.y,b.y)-margin,bottom=Math.max(a.y,b.y)+margin;
+  blockedAreas.push({left,right,top,bottom});
+  candidatesX.push(clamp(left,margin,vw-margin),clamp(right,margin,vw-margin));
+  candidatesY.push(clamp(top,margin,vh-margin),clamp(bottom,margin,vh-margin));
+ }
+ let focus=center,bestDistance=Infinity;
+ for(const x of candidatesX)for(const y of candidatesY){
+  const distance=(x-center.x)**2+(y-center.y)**2;
+  if(distance>=bestDistance||blockedAreas.some(area=>x>area.left&&x<area.right&&y>area.top&&y<area.bottom))continue;
+  focus={x,y};
+  bestDistance=distance;
+ }
+ return focus;
+}
+
+function resize(){phoneCameraFocus=null;dpr=Math.min(window.devicePixelRatio||1,2);vw=Math.max(1,wrap.clientWidth);vh=Math.max(1,wrap.clientHeight);canvas.width=Math.round(vw*dpr);canvas.height=Math.round(vh*dpr);scale=Math.max(.83,Math.max(vw/W,vh/H)*1.035);}
 function rounded(x,y,w,h,r,color){ctx.fillStyle=color;ctx.beginPath();ctx.roundRect(x,y,w,h,r);ctx.fill();}
 function line(x1,y1,x2,y2,color,width=1){ctx.strokeStyle=color;ctx.lineWidth=width;ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.stroke();}
 function disk(x,y,r,color){ctx.beginPath();ctx.arc(x,y,r,0,TAU);ctx.fillStyle=color;ctx.fill();}
@@ -1300,8 +1338,13 @@ function enemySprite(e){let t=state.frame, bob=Math.sin(e.anim*3)*2,x=e.x,y=e.y+
 }
 function drawPlayer(){let p=state.player,blink=p.inv>0&&Math.sin(p.inv*45)>0;ctx.save();ctx.translate(p.x,p.y);let bob=Math.sin(state.frame*9)*1.5;disk(0,15,19,'#01061480');if(p.ward>0){let g=ctx.createRadialGradient(0,0,15,0,0,35);g.addColorStop(0,'#bcebe715');g.addColorStop(1,'#9beee520');disk(0,0,34,g);ctx.beginPath();ctx.arc(0,0,28,0,TAU);ctx.strokeStyle='#a2f1e1aa';ctx.lineWidth=2;ctx.stroke();ctx.save();ctx.rotate(state.frame*.21);ctx.strokeStyle='#c8f6eb55';ctx.lineWidth=1;ctx.beginPath();for(let j=0;j<6;j++){let a=TAU*j/6;let xx=Math.cos(a)*31,yy=Math.sin(a)*31;if(j===0)ctx.moveTo(xx,yy);else ctx.lineTo(xx,yy);}ctx.closePath();ctx.stroke();ctx.restore();}if(!blink){ctx.fillStyle='#4775a3';ctx.beginPath();ctx.moveTo(0,-18+bob);ctx.lineTo(-17,17+bob);ctx.lineTo(17,17+bob);ctx.closePath();ctx.fill();disk(0,-7+bob,13,'#dfbd99');ctx.fillStyle='#2e325e';ctx.beginPath();ctx.moveTo(0,-25+bob);ctx.lineTo(-14,-8+bob);ctx.lineTo(14,-8+bob);ctx.closePath();ctx.fill();disk(-4,-6+bob,1.6,'#252338');disk(4,-6+bob,1.6,'#252338');}let wx=Math.cos(p.dir)*24,wy=Math.sin(p.dir)*24;line(Math.cos(p.dir)*10,Math.sin(p.dir)*10,wx,wy,'#f1cf91',4);disk(wx,wy,5,'#aeddea');ctx.restore();}
 function draw(){if(!state)return;ctx.setTransform(dpr,0,0,dpr,0,0);ctx.clearRect(0,0,vw,vh);
- const p=state.player;let viewW=vw/scale,viewH=vh/scale;camera.x=clamp(p.x-viewW/2,0,Math.max(0,W-viewW));camera.y=clamp(p.y-viewH/2,0,Math.max(0,H-viewH));
- let sx=state.shake&&!reducedVfx?(Math.random()-.5)*state.shake*2:0,sy=state.shake&&!reducedVfx?(Math.random()-.5)*state.shake*2:0;ctx.setTransform(scale*dpr,0,0,scale*dpr,(-camera.x+sx)*scale*dpr,(-camera.y+sy)*scale*dpr);drawBackground();for(let orb of state.orbs){let y=orb.y+Math.sin(orb.phase)*5;let c=orb.type==='health'?'#9bffb8':'#99baff';let g=ctx.createRadialGradient(orb.x,y,3,orb.x,y,22);g.addColorStop(0,c+'aa');g.addColorStop(1,c+'00');disk(orb.x,y,22,g);drawRunic(orb.x,y,9,c+'bd',orb.phase*.5);disk(orb.x,y,4,c);}
+ const p=state.player,viewW=vw/scale,viewH=vh/scale;
+ const phone=document.documentElement.classList.contains('arcade-immersive');
+ const focus=phone?(phoneCameraFocus??=findPhoneCameraFocus()):null;
+ // Let the phone camera see beyond the walls so the caster stays clear of the HUD.
+ const viewX=focus?p.x-focus.x/scale:clamp(p.x-viewW/2,0,Math.max(0,W-viewW));
+ const viewY=focus?p.y-focus.y/scale:clamp(p.y-viewH/2,0,Math.max(0,H-viewH));
+ let sx=state.shake&&!reducedVfx?(Math.random()-.5)*state.shake*2:0,sy=state.shake&&!reducedVfx?(Math.random()-.5)*state.shake*2:0;camera.x=viewX-sx;camera.y=viewY-sy;ctx.setTransform(scale*dpr,0,0,scale*dpr,-camera.x*scale*dpr,-camera.y*scale*dpr);drawBackground();for(let orb of state.orbs){let y=orb.y+Math.sin(orb.phase)*5;let c=orb.type==='health'?'#9bffb8':'#99baff';let g=ctx.createRadialGradient(orb.x,y,3,orb.x,y,22);g.addColorStop(0,c+'aa');g.addColorStop(1,c+'00');disk(orb.x,y,22,g);drawRunic(orb.x,y,9,c+'bd',orb.phase*.5);disk(orb.x,y,4,c);}
  drawAttackWarnings();
  state.enemies.filter(e=>!e.dead).sort((a,b)=>a.y-b.y).forEach(enemySprite);
  for(let s of state.shots){if(s.type==='player')fxDrawProjectile(s);else{let g=ctx.createRadialGradient(s.x,s.y,1,s.x,s.y,25);g.addColorStop(0,s.color+'cb');g.addColorStop(1,s.color+'00');disk(s.x,s.y,25,g);disk(s.x,s.y,s.r,s.color);}}
@@ -1321,7 +1364,11 @@ function pointerTarget(ev){
  if(currentPaused())return;
  // Only handle left/right-click and direct touchscreen taps on open canvas.
  if(ev.pointerType==='mouse'&&ev.button!==0&&ev.button!==2)return;
- let rect=canvas.getBoundingClientRect(),rotated=document.documentElement.classList.contains('arcade-virtual'),localX=rotated?(ev.clientY-rect.top)*(canvas.clientWidth/Math.max(1,rect.height)):(ev.clientX-rect.left)*(canvas.clientWidth/Math.max(1,rect.width)),localY=rotated?(rect.right-ev.clientX)*(canvas.clientHeight/Math.max(1,rect.width)):(ev.clientY-rect.top)*(canvas.clientHeight/Math.max(1,rect.height)),x=localX/scale+camera.x,y=localY/scale+camera.y;
+ const rotated=document.documentElement.classList.contains('arcade-virtual');
+ const point=canvasPoint(ev.clientX,ev.clientY,canvas.getBoundingClientRect(),rotated);
+ const x=point.x/scale+camera.x,y=point.y/scale+camera.y;
+ // The space beyond the room walls is only a backdrop.
+ if(ev.button!==2&&(x<0||x>W||y<0||y>H))return;
  let picked=state.enemies.find(e=>!e.dead&&Math.hypot(x-e.x,y-e.y)<e.r+21);
  if(picked){state.target=state.target===picked.id?null:picked.id;showTip(state.target?'Target locked. Cast with Space or right-click.':'Target cleared; auto-aim enabled.',1.7);if(ev.button===2)cast();return;}
  if(ev.button===2){cast();return;}
@@ -1394,6 +1441,10 @@ window.addEventListener('blur',resetJoystick);
 window.addEventListener('keydown',e=>{if(e.key?.toLowerCase()==='m'&&!e.repeat&&!e.target.closest?.('input,textarea')){window.__sigilSfx.setOn(!window.__sigilSfx.isOn());showTip(soundEngine.isOn()?'Sound effects ON':'Sound effects MUTED',1.4);}});
 window.addEventListener('resize',resize);if('ResizeObserver'in window)new ResizeObserver(resize).observe(wrap);
 initialize();resize();requestAnimationFrame(tick);
+if('ResizeObserver'in window)requestAnimationFrame(()=>{
+ const observer=new ResizeObserver(()=>{phoneCameraFocus=null;});
+ for(const element of wrap.querySelectorAll(cameraHudSelector))observer.observe(element);
+});
 window.__sigilMapData=()=>{if(!state)return null;let r=roomData();return {world:{w:W,h:H,tile:T,cols:COLS,rows:ROWS},room:state.room,roomName:r.short||r.name,trainingStep:state.trainingStep,cleared:state.cleared,portal:portalPosition(),practiceMarker:trainingCircle,obstacles:r.obstacles.map(a=>a.slice()),player:{x:state.player.x,y:state.player.y,dir:state.player.dir,hp:state.player.hp},enemies:state.enemies.filter(e=>!e.dead).map(e=>({x:e.x,y:e.y,r:e.r,boss:e.type==='boss',elite:e.elite,id:e.id})),orbs:state.orbs.map(o=>({x:o.x,y:o.y,type:o.type})),endless:state.endless.active,floor:state.endless.floor};};
 window.__sigilDebug={getSnapshot:()=>({room:state.room,trainingStep:state.trainingStep,trainingDone:state.trainingDone,dungeonCheckpoint:state.dungeonCheckpoint,practice:{...state.practice},labVisible:!$('labPanel').hidden,cleared:state.cleared,unlocked:state.unlocked,hp:state.player.hp,mana:state.player.mana,riposte:state.player.riposte,kills:state.kills,enemies:state.enemies.filter(e=>!e.dead).length,spell:getSpell().name,reactions:state.reactions,customKills:state.customKills,boons:{...(state.endless.boons||{})},discovery:state.discovery?.floor||null,attackStats:{...state.attackStats},foeDetails:state.enemies.filter(e=>!e.dead).map(e=>({warning:e.telegraph?.kind||null,warningTime:e.telegraph?.t||0,type:e.type,affinity:e.affinity,weak:e.weakElement,hp:e.hp,slow:e.slow,burn:e.burn,x:e.x,y:e.y,aiMode:e.aiMode})),spellsSaved:library.spells.map(p=>({name:p.name,recipe:{...p.recipe}})),hotbar:library.loadout.map(s=>({...s})),draftMode:state.draftMode,selectedSlot:state.selectedSlot,cooldowns:[...state.spellCooldowns],basicHealCd:state.basicHealCd,started:state.started,vfxActive:state.vfx.length,shotsActive:state.shots.length,paused:currentPaused(),won:state.won,dead:state.dead,player:{x:state.player.x,y:state.player.y},input:{joystick:{x:analog.x,y:analog.y},gamepad:{x:padMotion.x,y:padMotion.y},endless:{...state.endless},rankings:{score:rankData('score').length,floor:rankData('floor').length,speed:rankData('speed').length},mouseRoute:mouseRoute.length,mouseGoal:mouseGoal}})};
 })();
