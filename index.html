@@ -410,6 +410,13 @@ html.arcade-virtual .v08-intel span{font-size:9px}html.arcade-virtual .v08-intel
 #v083Riposte[hidden]{display:none!important}
 .lab-metrics{grid-template-columns:repeat(auto-fit,minmax(95px,1fr))}
 @media(max-width:660px){#v083Riposte{font-size:9px;margin-top:4px;padding:4px 6px}}
+/* Keep browser gestures off the gameplay surface, including the in-arena controls. */
+html.v07 .arena-shell,
+html.v07 .quickbar-wrap.moba-docked,
+html.v07 .moba-utility,
+html.v07 .v07-map {
+  touch-action: none;
+}
 </style>
 </head>
 <body>
@@ -1344,6 +1351,17 @@ $('labReset').addEventListener('click',()=>{if(state.room!==-1)return;let d=stat
 $('labRestore').addEventListener('click',()=>{if(state.room!==-1)return;state.player.hp=100;state.player.mana=100;state.player.dashCd=0;toast('Health, mana, and dash restored.');updateAll();});
 for(let b of document.querySelectorAll('[data-dummy]'))b.addEventListener('click',()=>{setPracticeTarget(b.dataset.dummy);toast(`Target switched to ${b.textContent.trim()}.`);});
 canvas.addEventListener('pointerdown',pointerTarget);canvas.addEventListener('contextmenu',e=>e.preventDefault());
+
+// Some mobile browsers still start a page gesture across two game controls.
+function preventArenaPinch(event){
+  if(event.cancelable && event.touches.length > 1) event.preventDefault();
+}
+wrap.addEventListener('touchmove',preventArenaPinch,{passive:false});
+for(const type of ['gesturestart','gesturechange']){
+  wrap.addEventListener(type,event=>{
+    if(event.cancelable) event.preventDefault();
+  },{passive:false});
+}
 const preventSet=new Set([' ','arrowup','arrowdown','arrowleft','arrowright','shift']);
 window.addEventListener('keydown',e=>{
  let k=e.key.toLowerCase();if(e.target.closest('input,textarea')){if(k==='escape'){e.target.blur();if(!$('spellOverlay').hidden)closeBook();else if(!$('grimoireOverlay').hidden)closeGrimoire();}return;}
